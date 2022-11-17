@@ -2,6 +2,7 @@ from settings import SAVED_SETTINGS, DEFAULT_COLORS
 from simplified_pygame import SPRITES, Canvas, assets_path
 
 # upload sprited
+# Cắt ảnh từ file menu_sprites.png
 sprites = Canvas.load(assets_path('menu_sprites.png'), corner_alpha=True)
 items = """ \
     _TetrisGame _TetrisHeartMode _TetrisGameWrestling
@@ -15,13 +16,14 @@ for k, line in enumerate(items.split('\n')):
     for i, U in enumerate(line.split()):
         X, Y = 5 + i*176, 5 + k*106
         SPRITES[U] = sprites.crop(X, Y, 175, 105)
+#tạo inmage cho game mode(tạo hình ảnh cho các chế độ trò chơi)
 def make_game_mode_sprites():
     new_color = SAVED_SETTINGS['color_scheme']
     color_scheme = {tuple(col): tuple(new_color[k]) for k, col in DEFAULT_COLORS.items()}
     sprites = [spr for spr in SPRITES if spr.startswith('_')]
     for spr in sprites:
         SPRITES[spr[1:]] = SPRITES[spr].replace_colors(color_scheme)
-
+# tạo ảnh cho các thao tác control
 def make_letters_sprite():
     SPRITES['wasd'] = s = SPRITES['empty_wasd'].copy()
     letters = {v: k.replace('comma', '<').replace('period', '>').upper() for k, v in SAVED_SETTINGS['letters'].items()}
