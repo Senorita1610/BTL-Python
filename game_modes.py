@@ -23,6 +23,7 @@ class TetrisGame():
         self.player.read_events(events, dt, key_pressed)
         self.well.read_events(events, dt, key_pressed)
 
+    #kiểm tra va chạm
     def check_collision(self, well, player, figure):
         for i, j in figure:
             if well[i, j] == '#':
@@ -35,10 +36,13 @@ class TetrisGame():
         while full:
             well.remove_line(full)
             player.score_up()
+            #score tăng thêm 1
             player.speed_up()
-            full = well.get_full_line()
+            #tăng tốc
+            full=well.get_full_line()
             cleared += 1
         simplified_pygame.mixer.play_sound(f'pop{min(4, cleared)}')
+        #bật nhạc 
 
     def do_game_over(self, player):
         player.play = False
@@ -118,7 +122,9 @@ class TetrisGameSpeedUp(TetrisGame2Players):
     doubled until they complete
     their own line.
     """
+    #Khi 1 người chơi hoàn thành 1 hàng ngang thì tốc độ trò chơi của đối thủ tăng lên
     #chuỗi docstring mô tả của lớp TetrisGameSpeedUp
+    #hàm draw_game y hệt TetrisGame2Players
     def do_check_lines(self, well, player):
         if player is self.player1:
             other = self.player2
@@ -132,7 +138,9 @@ class TetrisGameSpeedUp(TetrisGame2Players):
             player.score_up()
             full = well.get_full_line()
             player.step_duration = player.appropriate_speed()
+            #tốc độ của player giữ nguyên
             other.step_duration = other.appropriate_speed() // 2
+            #tốc độ của other tăng gấp đôi
             player.message = ''
             other.message = '+ speed +'
             cleared += 1
@@ -144,6 +152,7 @@ class TetrisGameMirror(TetrisGame2Players):
     Two players are receiving
     identical figures.
     """
+    #2 người chơi nhận khối hình tiếp theo giống hệt nhau
     #chuỗi docstring mô tả của lớp TetrisMirror
     def __init__(self, w=10, h=25):
         self.well1 = tetris.TetrisWell(self, w, h)
@@ -152,9 +161,10 @@ class TetrisGameMirror(TetrisGame2Players):
         self.player2 = tetris.FallingFigure(self, self.well2, controlls=2, mouse_offset=0.25)
 
         self.ready = [False, False]
-        self.player2.nextfig = self.player1.nextfig
+        self.player2.nextfig = self.player1.nextfig#tạo 2 khối hình giống nhau
         self.do_next_turn(self.player1)
         self.do_next_turn(self.player2)
+        #lấy hàm do_next_turn của TetrisGame2Players
 
     def do_drop(self):
         # assume nextfigs are the same
@@ -169,17 +179,18 @@ class TetrisGameWrestling(TetrisGameMirror):
     trying to complete
     your own lines
     """
+    #Dùng 1 khối hình khác để ngăn cản đối thủ của bạn, làm cho đối thủ của bạn khó chơi hơn
     #chuỗi docstring mô tả của lớp TetrisGameWrestling
     def __init__(self, w=10, h=25):
         self.well1 = tetris.TetrisWell(self, w, h)
         self.well2 = tetris.TetrisWell(self, w, h)
         self.player1 = tetris.FallingFigure(self, self.well1, controlls=1, mouse_offset=0.75)
         self.player2 = tetris.FallingFigure(self, self.well2, controlls=2, mouse_offset=0.25)
-        self.player1.start_x = 7
-        self.player2.start_x = 2
+        self.player1.start_x = 7#bắt đầu tại x=7
+        self.player2.start_x = 2#bắt đầu tại x=2
 
         self.ready = [False, False]
-        self.player2.nextfig = self.player1.nextfig
+        self.player2.nextfig = self.player1.nextfig#tạo 2 khối hình giống nhau
         self.do_next_turn(self.player1)
         self.do_next_turn(self.player2)
 
@@ -190,6 +201,7 @@ class TetrisGameWrestling(TetrisGameMirror):
                 return 'blocked'
 
         # in addition, we need to check collisions between figures
+        #kiểm tra sự va chạm giữa 2 khối hình giống nhau trong màn hình của 1 người chơi
         if player is self.player1:
             if set(figure) & set(self.player2.figure):
                 return 'friend'
@@ -210,8 +222,11 @@ class TetrisGameWrestling(TetrisGameMirror):
 
         self.player2.draw(offset2)
         self.player1.draw(offset1)
-        self.player2.draw_ghost(offset1)
-        self.player1.draw_ghost(offset2)
+        
+        #vẽ khối hình dùng để ngăn cản đối phương
+        self.player2.draw_ghost(offset1)#hình của người chơi 2 vẽ lên màn hình của người 1
+        self.player1.draw_ghost(offset2)#hình của người chơi 1 vẽ lên màn hình của người 2
+        #tạo ra các khối hình gồm các hình tròn tạo thành
 
         self.player2.draw_interface(offset2)
         self.player1.draw_interface(offset1)
@@ -228,7 +243,6 @@ class TetrisGameCoop(TetrisGame2Players):
     def play(self):
         return self.well1.play & self.well2.play
 
-
 class TetrisGameBalance(TetrisGameCoop):
     """
     Heights of both wells are
@@ -239,18 +253,28 @@ class TetrisGameBalance(TetrisGameCoop):
     #chuỗi docstring mô tả của lớp TetrisGameBalance
     def __init__(self):
         super().__init__(10, 20)
-        self.well1.possible_h = 30
-        self.well2.possible_h = 30
-
+        #self.well1=tetris.TetrisWell(self,10,20)
+        #self.well2=tetris.TetrisWell(self,10,20)
+        #self.player1=tetris.FallingFigure(self,self.well1,controlls=1,mouse_offset=0.75)
+        #self.player2=tetris.FallingFigure(self,self.well2,controlls=2,mouse_offset=0.25)
+        #self.ready=[False,False]
+        #self.do_next_turn(self.player1)
+        #self.do_next_turn(self.player2)
+        self.well1.possible_h=30
+        self.well2.possible_h=30
     def do_drop(self):
-        h1 = self.well1.space_left()
-        h2 = self.well2.space_left()
-
-        if h1 > h2+1:
+        h1=self.well1.space_left()
+        h2=self.well2.space_left()
+        if h1 > h2+1:#nếu chiều cao khoảng trống của người 1 -1 > chiều cao khoảng trống của người 2 
             self.well2.borrow_line(self.well1)
+            #chiều dài màn hình của người 1 sẽ bị trừ đi 1
+            #chiều dài màn hình của người 2 sẽ thêm 1
 
         if h2 > h1+1:
             self.well1.borrow_line(self.well2)
+            #chiều dài màn hình của người 2 sẽ bị trừ đi 1
+            #chiều dài màn hình của người 1 sẽ thêm 1
+        #nếu h1 hoặc h2 >=30 thì hàm borrow_line không được thực hiện
 
         self.player1.drop()
         self.player2.drop()
@@ -258,13 +282,19 @@ class TetrisGameBalance(TetrisGameCoop):
     def draw_game(self, W):
         size = ACTIVE_SETTINGS['size']
         super().draw_game(W.with_offset(0, -size*2))
+        #vẽ 2 surface cho 2 người chơi
 
         sub = W.crop(W.w//4 - 5*size, size*8, size*10, size*self.well2.h).flip(False, True).set_alpha(50)
+        #flip(False,True): lật surface theo chiều dọc
+        #set_alpha(50): các pixel trong surface sẽ được vẽ hơi trong suốt
+        #0: hoàn toàn trong suốt
+        #255: hoàn toàn mờ đục
         W.sprite(W.w//4*3 - 5*size, size*(9+self.well1.h), sub)
-
+        #surface sub sẽ nằm phía dưới màn hình của người chơi 2
         sub = W.crop(W.w//4*3 - 5*size, size*8, size*10, size*self.well1.h).flip(False, True).set_alpha(50)
         W.sprite(W.w//4 - 5*size, size*(9+self.well2.h), sub)
-
+        #surface sub sẽ nằm phía dưới màn hình của người chơi 1
+        #2 surface sub có chiều cao sẽ thay đổi theo chiều cao màn hình của 2 người chơi
 
 class TetrisGameSwap(TetrisGameCoop):
     """
@@ -291,6 +321,7 @@ class TetrisGameCommonWell(TetrisGameCoop):
     Play together in the same
     big well.
     """
+    #2 người cùng chơi với 1 màn hình lớn
     #chuỗi docstring mô tả của lớp TetrisGameCommonWell
     def __init__(self):
         self.well = tetris.TetrisWell(self, 20, 25)
