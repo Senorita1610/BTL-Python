@@ -5,9 +5,9 @@ from settings import ACTIVE_SETTINGS, SAVED_SETTINGS
 
 FIGURE = {'-': [(0, 0), (1, 0), (-2, 0), (-1, 0)],
           '0': [(0, 0), (-1, 0), (0, 1), (-1, 1)],
-          'L': [(0, 0), (-1, 0), (1, 0), (-1, 1)],
+          'L': [(0, 0), (-1, -1), (1, 0), (-1, 1)],
           'j': [(0, 0), (-1, 0), (1, 0), (1, 1)],
-          's': [(-1, 0), (0, 0), (0, -1), (1, -1)],
+          's': [(-1, 0), (0, 1), (0, -1), (1, -1)],
           'r': [( 1, 0), (0, 0), (0, -1), (-1, -1)],
           'T': [(-1, 0), (0, 0), (0, -1), (1, 0)]}
 
@@ -151,12 +151,15 @@ class ColorField():
         return C
 
     def remove_line(self, line_to_remove):
+        #xóa màu
+        #dịch chuyển màu xuống dưới
         for i in range(line_to_remove, 0, -1):
             for x in range(self.w):
                 self.M[i][x] = self.M[i-1][x]
                 self.left[i][x] = self.left[i-1][x]
                 self.bottom[i][x] = self.bottom[i-1][x]
                 self.corner[i][x] = self.corner[i-1][x]
+        #xóa toàn bộ hàng đầu tiên từ trên xuống
         for x in range(self.w):
             self.M[0][x] = None
             self.left[0][x] = (255, 255, 255, 0)
@@ -211,6 +214,7 @@ class TetrisWell(simplified_pygame.EventReader):
         else:
             self.M[y][x] = value
 
+    #trả về hàng có đầy đủ các khối hình vuông
     def get_full_line(self):
         for j, line in enumerate(self.M):
             if line == ['#']*self.w:
@@ -218,9 +222,11 @@ class TetrisWell(simplified_pygame.EventReader):
         return None
 
     def space_left(self):
+        #ban đầu chiều cao của màn hình là 20 
         h = 0
         while all(self[x, h] != '#' for x in range(self.w)):
             h += 1
+        #h: số hàng mà không tồn tại 1 khối hình nào
         return h-1
 
     #############################
@@ -259,6 +265,7 @@ class TetrisWell(simplified_pygame.EventReader):
         for i in range(line_to_remove, -1, -1):
             for x in range(self.w):
                 self[x, i] = self[x, i-1]
+                #xóa hàng bằng cách đưa hàng bên trên xuống dưới
         self.C.remove_line(line_to_remove)
 
     def borrow_line(self, other):
