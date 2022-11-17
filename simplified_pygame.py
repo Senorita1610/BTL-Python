@@ -693,6 +693,7 @@ class Canvas():
         #tạo 1 bản sao surface
     def set_alpha(self, *args):
         self.surface.set_alpha(*args)
+        #các pixel sẽ được vẽ hơi trong suốt
         return self
 
     def add_outline(self, col=(0, 0, 0)):
