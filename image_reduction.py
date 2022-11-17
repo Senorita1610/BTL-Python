@@ -8,7 +8,7 @@ from tetris import StartTitle
 from settings import SAVED_SETTINGS, ACTIVE_SETTINGS
 
 
-
+#set screen
 SCREEN = simplified_pygame.PyGameWindow(
     w=SAVED_SETTINGS['w'],
     h=SAVED_SETTINGS['h'],
@@ -20,6 +20,7 @@ SCREEN = simplified_pygame.PyGameWindow(
 
 
 # upload sprited
+# cắt ảnh từ file scr5-copy lưu vào scr5-copy2
 S = simplified_pygame.Canvas.load(simplified_pygame.assets_path('../screens/scr5 - Copy.png'), corner_alpha=True).surface
 for i in range(500):
     for j in range(500):
