@@ -360,11 +360,11 @@ class FallingFigure(simplified_pygame.EventReader):
         if not self.play:
             return
         #nếu tồn tại khối hình đang di chuyển thì không thể để khối hình tiếp theo di chuyển xuống 
-        figure, self.nextfig = self.nextfig, self.random_generator.draw()
-        self.cur = figure+'^'       # figure's name and location
-        self.item = FIGURE[figure]  # figure without x and y (khối hình tiếp theo)
-        self.x = self.start_x
-        self.y = - max(y for x, y in self.item) - 2
+        figure,self.nextfig=self.nextfig, self.random_generator.draw()
+        self.cur=figure+'^'       # figure's name and location
+        self.item=FIGURE[figure]  # figure without x and y (khối hình tiếp theo)
+        self.x=self.start_x
+        self.y=-max(y for x,y in self.item)-2
         #khối tiếp theo sẽ nằm ở giữa bên trên cùng
 
     @property
