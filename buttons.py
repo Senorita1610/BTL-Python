@@ -115,8 +115,9 @@ class ConditionalText:
 
     def draw(self, W, size, scale):
         val = SAVED_SETTINGS[self.parameter]
-        text = self.descriptions.get(val, '')
+        text = self.descriptions.get(val, '')#lấy đoạn text từ giá trị val
         W.write(self.x*size, self.y*size, text, size=size*0.8)
+        #viết đoạn text lên SCREEN
 
     def __repr__(self):
         return str(self.parameter)
@@ -167,14 +168,17 @@ class SetButton(_Button):
         box = (self.x*size, (self.y+0.1)*size, self.w*size, self.h*size)
         if selected:
             W.rect(box, (255, 200, 100))
+            #nếu di chuyển chuột vào vùng muốn chọn thì vùng đó sẽ đổi thành màu (255,200,100)
         elif SAVED_SETTINGS[self.parameter] == self.value:
             col = [min(255, x+30) for x in ACTIVE_SETTINGS['color_scheme']['background']]
             W.rect(box, col)
+            #vẽ 1 hình chữ nhật màu ACTIVE_SETTINGS['color_scheme']['background'] vào tên màu đã chọn trước đó
 
         W.write((self.x+1)*size, (self.y+1)*size, self.text, size=size)
+        #vẽ đoạn text lên SCREEN
 
     def on_mouse_click(self):
-        SAVED_SETTINGS[self.parameter] = self.value
+        SAVED_SETTINGS[self.parameter] = self.value#nếu click chuột thì giá trị màu mới sẽ được lưu lại
         self.post_activation()
 
     def post_activation(self):
@@ -201,7 +205,7 @@ class SmallSetButton(SetButton):
 
 
 class ActionButton(_Button):
-
+    #reset kích thước màn hình
     def __init__(self, text, action, w=10, h=3):
         super().__init__(text, w=w, h=h)
         self.action = action
