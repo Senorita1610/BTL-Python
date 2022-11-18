@@ -301,17 +301,17 @@ class TetrisGameSwap(TetrisGameCoop):
     Each turn players swap
     their controls.
     """
+    #đổi điều khiển sau mỗi lượt chơi
     #chuỗi docstring mô tả của lớp TetrisGameCoop
     def __init__(self):
         super().__init__()
-        self.player1.message = '<   Left'
-        self.player2.message = 'Right   >'
-
+        self.player1.message='<   Left'
+        self.player2.message='Right   >'
     def do_drop(self):
-        self.player1, self.player2 =  self.player2, self.player1
-        self.player1.well, self.player2.well =  self.player2.well, self.player1.well
-        self.player1.nextfig, self.player2.nextfig =  self.player2.nextfig, self.player1.nextfig
-        self.player1.mouse_offset, self.player2.mouse_offset = self.player2.mouse_offset, self.player1.mouse_offset
+        self.player1,self.player2=self.player2,self.player1
+        self.player1.well,self.player2.well=self.player2.well, self.player1.well
+        self.player1.nextfig, self.player2.nextfig =  self.player2.nextfig, self.player1.nextfig#thay đổi ký tự màu cho nhau
+        self.player1.mouse_offset, self.player2.mouse_offset = self.player2.mouse_offset, self.player1.mouse_offset#thay đổi vị trí con chuột
         self.player1.drop()
         self.player2.drop()
 
@@ -324,7 +324,7 @@ class TetrisGameCommonWell(TetrisGameCoop):
     #2 người cùng chơi với 1 màn hình lớn
     #chuỗi docstring mô tả của lớp TetrisGameCommonWell
     def __init__(self):
-        self.well = tetris.TetrisWell(self, 20, 25)
+        self.well = tetris.TetrisWell(self, 20, 25)#tạo 1 màn hình kích thước 25x20
         self.player1 = tetris.FallingFigure(self, self.well, controlls=1)
         self.player2 = tetris.FallingFigure(self, self.well, controlls=2)
 
@@ -343,7 +343,6 @@ class TetrisGameCommonWell(TetrisGameCoop):
         for i, j in figure:
             if well[i, j] == '#':
                 return 'blocked'
-
         # in addition, we need to check collisions between figures
         if player is self.player1:
             other = self.player2
@@ -351,9 +350,7 @@ class TetrisGameCommonWell(TetrisGameCoop):
             other = self.player1
         if set(other.figure) & set(figure):
             return 'friend'
-
         return False
-
     def draw_game(self, W):
         size = ACTIVE_SETTINGS['size']
         offset = W.with_offset(W.w//2 - self.well.w//2*size, size*10)
@@ -361,20 +358,20 @@ class TetrisGameCommonWell(TetrisGameCoop):
         self.player2.draw(offset)
         self.player1.draw(offset)
         self.player2.draw_interface(offset)
-
     def do_check_lines(self, well, player):
         pass
 
     def do_drop(self):
         """ check lines and drop """
-        full = self.well.get_full_line()
+        full = self.well.get_full_line()#lấy hàng có đầy đủ khối 
         cleared = 0
         while full:
-            self.well.remove_line(full)
+            self.well.remove_line(full)#xóa hàng
             self.player1.score_up()
             self.player1.speed_up()
             self.player2.score_up()
             self.player2.speed_up()
+            #cả 2 đều được tăng score và tăng tốc độ
             full = self.well.get_full_line()
             cleared += 1
 
@@ -385,7 +382,7 @@ class TetrisGameCommonWell(TetrisGameCoop):
 
 
 class TetrisSeqentialDrop(TetrisGameCoop):
-
+    #có 2 người chơi, mỗi lượt chỉ có 1 người chơi
     def __init__(self, w=10, h=25):
         self.well1 = tetris.TetrisWell(self, w, h)
         self.well2 = tetris.TetrisWell(self, w, h)
@@ -405,8 +402,8 @@ class TetrisSeqentialDrop(TetrisGameCoop):
         self.well2.read_events(events, dt, key_pressed)
 
     def do_next_turn(self, player):
-        self.now_playing_1 = not self.now_playing_1
-        self.do_drop()
+        self.now_playing_1 = not self.now_playing_1#chuyển sang người chưa chơi 
+        self.do_drop()#
 
     def do_drop(self):
         if self.now_playing_1:
@@ -431,8 +428,8 @@ class TetrisHeartMode(TetrisSeqentialDrop):
 
     def draw_game(self, W):
         size = ACTIVE_SETTINGS['size']
-        P1 = simplified_pygame.Canvas(10 * size, 20 * size, dy=5 * size)
-        P2 = simplified_pygame.Canvas(10 * size-1, 30 * size, dy=5 * size)
+        P1 = simplified_pygame.Canvas(10 * size, 20 * size, dy=5 * size)#tạo P1 có chiều cao bé hơn để tránh che mất khối hình của người chơi 1
+        P2 = simplified_pygame.Canvas(10 * size, 30 * size, dy=5 * size)
         P3 = simplified_pygame.Canvas(10 * size, 30 * size, dy=5 * size)
 
         self.well2.draw(P2)
@@ -443,14 +440,14 @@ class TetrisHeartMode(TetrisSeqentialDrop):
         self.player1.draw(P3)
         self.player1.draw_interface(W.with_offset(W.w//4*3 - self.well1.w//2*size, size*10))
 
-        P3 = P3.rotate(-45)
-        P2 = P2.rotate(45)
-        P1 = P1.rotate(-45)
+        P3 = P3.rotate(-45)#xoay 45 độ cùng chiều kim đồng hồ
+        P2 = P2.rotate(45)#xoay 45 độ ngược chiều kim đồng hồ
+        P1 = P1.rotate(-45)#xoay 45 độ cùng chiều kim đồng hồ
+        #P2 và P3 đối xứng
         dx = P2.w / 4
         x2 = W.w//2 - int(dx*3)
         x1 = W.w//2 - int(dx)
         x3 = W.w//2
-
         W.sprite(x3, size*5, P1)
         W.sprite(x2, size*5, P2)
         W.sprite(x1, size*5, P3)
