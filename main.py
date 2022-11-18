@@ -66,12 +66,13 @@ class AppControlls(simplified_pygame.EventReaderAsClass):
 
 
 def swap_menus():
+    #chuyển từ menu sang settings và ngược lại
     global GAME_STATE
     GAME_STATE = {
         'menu': 'settings',
         'settings': 'menu'}[GAME_STATE]
-    menu_page._mouse_pos = menu_page.buttons[-2]
-    menu_settings._mouse_pos = menu_settings.buttons[-1]
+    menu_page._mouse_pos = menu_page.buttons[-2]#vị trí button này gần cuối trong menu_page
+    menu_settings._mouse_pos = menu_settings.buttons[-1]#vị trí button này ở cuối trong menu_settings
 
 
 class GameSelector(buttons.ActionButton):
@@ -188,7 +189,7 @@ menu_page.append(buttons.BigActionButton('Exit', lambda : SCREEN.exit()), dy=4)#
 
 def select_buttons():
     global GAME_STATE
-    GAME_STATE = 'select_buttons'
+    GAME_STATE = 'select_buttons'#chuyển trạng thái game
     MenuLetterSelector.selector = [
         ['left', 'press [move left]'],
         ['right', 'press [move right]'],
@@ -200,6 +201,7 @@ def select_buttons():
 DEMO_SEQUENCE = []
 
 def demonstrate_randomness():
+    #hiển thị ra các hình khối ngẫu nhiên
     global GAME_STATE
     GAME_STATE = 'random_demo'
     rg = tetris.make_random_generator()
@@ -219,16 +221,18 @@ def draw_random_demo():
 
 
 class MenuLetterSelector(simplified_pygame.EventReaderAsClass):
+    #chọn nút nhấn từ bàn phím
     def draw(W):
         size = ACTIVE_SETTINGS['size']
         x0 = SCREEN.w // 2
         y0 = size*26
         with W.part(x0, y0, size*14, size*10, (0, 0, 0, 200)) as C:
             C.write(size*7, size*4, MenuLetterSelector.selector[0][1], col=(255, 255, 255), pos='.')
+            #tạo 1 thông báo chọn nút nền đen, chữ trắng 
 
     @classmethod
     def on_any_key(cls, key):
-        (action, _), *cls.selector = cls.selector
+        (action, _), *cls.selector = cls.selector#đọc nút được chọn từ bàn phím
         # activate saving
         letters = SAVED_SETTINGS['letters']
         letters[key] = action
@@ -236,6 +240,7 @@ class MenuLetterSelector(simplified_pygame.EventReaderAsClass):
 
         sprites.make_letters_sprite()
         if not cls.selector:
+            #nếu không chọn gì thì không thể cài đặt những cái khác
             global GAME_STATE
             GAME_STATE = 'settings'
 
@@ -243,16 +248,17 @@ class MenuLetterSelector(simplified_pygame.EventReaderAsClass):
 class SetColorButton(buttons.SetButton):
     parameter = 'color_scheme'
     def post_activation(self):
-        ACTIVE_SETTINGS['color_scheme'].update(self.value)
-        start_title.__init__()
-        sprites.make_game_mode_sprites()
-        SCREEN.bg_color=SAVED_SETTINGS['color_scheme']['background'],
+        ACTIVE_SETTINGS['color_scheme'].update(self.value)#cập nhật giá trị màu nền mới
+        start_title.__init__()#self.w=11,self.h=35,self.GAME=None
+        sprites.make_game_mode_sprites()#thay đổi màu các màn
+        SCREEN.bg_color=SAVED_SETTINGS['color_scheme']['background'],#cập nhật màu nền mới
 
 
 class SetBleedButton(buttons.SmallSetButton):
+    #Các khối hình có bị trộn màu hay không
     parameter = 'bleed'
     def post_activation(self):
-        ACTIVE_SETTINGS['bleed'] = self.value
+        ACTIVE_SETTINGS['bleed'] = self.value#self.value: True hoặc False
         start_title.__init__()
 
 
@@ -260,6 +266,10 @@ class SetKeysButton(buttons.SetButton):
     parameter = 'letters'
     def post_activation(self):
         sprites.make_letters_sprite()
+        #QWERT: {'left':'A','right':'D','up':'W','down':'S'}
+        #AZERT: {'left':'Q','right':'D','up':'Z','down':'S'}
+        #Dvorak: {'left':'E','right':'A','up':'<','down':'O'}
+        #Colemak: {'left':'A','right':'S','up':'W','down':'R'}
 
 
 class SetSoundButton(buttons.SmallSetButton):
@@ -268,14 +278,14 @@ class SetSoundButton(buttons.SmallSetButton):
         simplified_pygame.mixer.volume = SAVED_SETTINGS['volume']
 
 
-menu_settings = buttons.Menu()
-menu_settings.append(buttons.Title('Color Scheme:'), y=3)
-menu_settings.append(SetColorButton('Default', settings.DEFAULT_COLORS), dy=1)
-menu_settings.append(SetColorButton('Piet Mondrian', settings.MONDRIAN_COLORS), dy=3)
-menu_settings.append(SetColorButton('Leonardo da Vinci', settings.LEONARDO_COLORS), dy=3)
-menu_settings.append(SetColorButton('John Everett Millais', settings.MILLAIS_COLORS), dy=3)
-menu_settings.append(SetColorButton('Vincent van Gogh', settings.VAN_GOGH_COLORS), dy=3)
-menu_settings.append(SetColorButton('Gustav Klimt', settings.KLIMT_COLORS), dy=3)
+menu_settings=buttons.Menu()
+menu_settings.append(buttons.Title('Color Scheme:'),y=3)#nhãn
+menu_settings.append(SetColorButton('Default',settings.DEFAULT_COLORS),dy=1)#nút
+menu_settings.append(SetColorButton('Piet Mondrian',settings.MONDRIAN_COLORS),dy=3)#nút
+menu_settings.append(SetColorButton('Leonardo da Vinci',settings.LEONARDO_COLORS), dy=3)#nút
+menu_settings.append(SetColorButton('John Everett Millais',settings.MILLAIS_COLORS), dy=3)#nút
+menu_settings.append(SetColorButton('Vincent van Gogh',settings.VAN_GOGH_COLORS), dy=3)#nút
+menu_settings.append(SetColorButton('Gustav Klimt',settings.KLIMT_COLORS), dy=3)#nút
 
 menu_settings.append(buttons.Title('Color blending effect:'), dy=5)
 menu_settings.append(SetBleedButton('Off', False), dy=1)
@@ -292,10 +302,10 @@ menu_settings.append(SetKeysButton('AZERT', simplified_pygame.ZQSD_AS_ARROWS), d
 menu_settings.append(SetKeysButton('Dvorak', simplified_pygame.AOE_AS_ARROWS), dy=3)
 menu_settings.append(SetKeysButton('Colemak', simplified_pygame.WARS_AS_ARROWS), dy=3)
 
-menu_settings.append(buttons.Sprite('wasd'), dx=1, dy=4)
-menu_settings.append(buttons.ActionButton('Configure Buttons...', select_buttons), dx=-1, dy=5)
+menu_settings.append(buttons.Sprite('wasd'), dx=1, dy=4)#vẽ bàn phím wasd lên SCREEN
+menu_settings.append(buttons.ActionButton('Configure Buttons...', select_buttons), dx=-1, dy=5)#Chọn phím tùy thích
 
-menu_settings.append(buttons.Title('Sound:'), x=14, y=30)
+menu_settings.append(buttons.Title('Sound:'), x=14, y=30)#âm lượng
 menu_settings.append(SetSoundButton('Off', 0), dy=1)
 menu_settings.append(SetSoundButton('1/2', 1/2), dx=3, dy=0)
 menu_settings.append(SetSoundButton('On', 1), dx=3, dy=0)
@@ -325,9 +335,10 @@ menu_settings.append(buttons.BigActionButton('Back', swap_menus), x=26, y=31)
 
 def draw_pause(W):
     size = ACTIVE_SETTINGS['size']
-    with W.part(0, W.h//2 - size*5, W.w, size*11, (0, 0, 0, 200)) as C:
+    with W.part(0, W.h//2 - size*5, W.w, size*11, (0, 0, 0, 200)) as C:#tạo 1 surface màu đen và bị mờ đủ để thấy được game
         C.write(W.w//2, size*2, 'PAUSE', size=int(2.5*size), col=[255]*3, pos='.')
         C.write(W.w//2, size*7, 'Press any key to continue', size=int(0.7*size), col=[255]*3, pos='.')
+        
         if SCREEN.joysticks_ids:
             C.write(W.w//2, size*8, 'Kayboard: Press [esc] to return, [space] for pause', size=int(0.7*size), col=[255]*3, pos='.')
             C.write(W.w//2, size*9, 'Controller: Press [back/select] to return, [start] for pause', size=int(0.7*size), col=[255]*3, pos='.')
@@ -390,7 +401,7 @@ for events, time_passed, pressed_keys in SCREEN.main_loop(framerate=600):
         #vẽ các nút,title,label lên SCREEN
         menu_page.draw(SCREEN)
     elif GAME_STATE == "settings":
-        start_title.draw(SCREEN)
+        start_title.draw(SCREEN)#vẽ start_title lên SCREEN
         menu_settings.draw(SCREEN)
     elif GAME_STATE == "select_buttons":
         start_title.draw(SCREEN)
