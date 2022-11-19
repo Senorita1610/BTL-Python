@@ -11,7 +11,7 @@ class TetrisGame():
     """
     #chuỗi docstring mô tả của lớp TetrisGame
     def __init__(self, w=10, h=25):
-        self.well = tetris.TetrisWell(self, w, h)
+        self.well = tetris.TetrisWell(self,30,27)
         self.player = tetris.FallingFigure(self, self.well, controlls=0)
         #controlls=0: 1 người chơi
         self.do_next_turn(self.player)
@@ -64,9 +64,9 @@ class TetrisGame2Players(TetrisGame):
     games happening side by side.
     """
     #chuỗi docstring mô tả của lớp TetrisGame2Players
-    def __init__(self, w=10, h=25):
-        self.well1 = tetris.TetrisWell(self, w, h)
-        self.well2 = tetris.TetrisWell(self, w, h)
+    def __init__(self, w=20, h=25):
+        self.well1 = tetris.TetrisWell(self,w,h)
+        self.well2 = tetris.TetrisWell(self,w,h)
         self.player1 = tetris.FallingFigure(self, self.well1, controlls=1, mouse_offset=0.75)
         self.player2 = tetris.FallingFigure(self, self.well2, controlls=2, mouse_offset=0.25)
 
@@ -154,7 +154,7 @@ class TetrisGameMirror(TetrisGame2Players):
     """
     #2 người chơi nhận khối hình tiếp theo giống hệt nhau
     #chuỗi docstring mô tả của lớp TetrisMirror
-    def __init__(self, w=10, h=25):
+    def __init__(self, w=20, h=25):
         self.well1 = tetris.TetrisWell(self, w, h)
         self.well2 = tetris.TetrisWell(self, w, h)
         self.player1 = tetris.FallingFigure(self, self.well1, controlls=1, mouse_offset=0.75)
@@ -181,13 +181,13 @@ class TetrisGameWrestling(TetrisGameMirror):
     """
     #Dùng 1 khối hình khác để ngăn cản đối thủ của bạn, làm cho đối thủ của bạn khó chơi hơn
     #chuỗi docstring mô tả của lớp TetrisGameWrestling
-    def __init__(self, w=10, h=25):
-        self.well1 = tetris.TetrisWell(self, w, h)
-        self.well2 = tetris.TetrisWell(self, w, h)
+    def __init__(self, w=20, h=25):
+        self.well1 = tetris.TetrisWell(self,w,h)
+        self.well2 = tetris.TetrisWell(self,w,h)
         self.player1 = tetris.FallingFigure(self, self.well1, controlls=1, mouse_offset=0.75)
         self.player2 = tetris.FallingFigure(self, self.well2, controlls=2, mouse_offset=0.25)
-        self.player1.start_x = 7#bắt đầu tại x=7
-        self.player2.start_x = 2#bắt đầu tại x=2
+        self.player1.start_x=16#bắt đầu tại x=16
+        self.player2.start_x=4#bắt đầu tại x=4
 
         self.ready = [False, False]
         self.player2.nextfig = self.player1.nextfig#tạo 2 khối hình giống nhau
@@ -252,7 +252,7 @@ class TetrisGameBalance(TetrisGameCoop):
     """
     #chuỗi docstring mô tả của lớp TetrisGameBalance
     def __init__(self):
-        super().__init__(10, 20)
+        super().__init__(10,20)
         #self.well1=tetris.TetrisWell(self,10,20)
         #self.well2=tetris.TetrisWell(self,10,20)
         #self.player1=tetris.FallingFigure(self,self.well1,controlls=1,mouse_offset=0.75)
@@ -324,12 +324,12 @@ class TetrisGameCommonWell(TetrisGameCoop):
     #2 người cùng chơi với 1 màn hình lớn
     #chuỗi docstring mô tả của lớp TetrisGameCommonWell
     def __init__(self):
-        self.well = tetris.TetrisWell(self, 20, 25)#tạo 1 màn hình kích thước 25x20
+        self.well = tetris.TetrisWell(self,30, 25)#tạo 1 màn hình kích thước 25x30
         self.player1 = tetris.FallingFigure(self, self.well, controlls=1)
         self.player2 = tetris.FallingFigure(self, self.well, controlls=2)
 
-        self.player2.start_x = 5
-        self.player1.start_x = 15
+        self.player2.start_x = 25
+        self.player1.start_x = 5
         self.ready = [False, False]
         self.do_next_turn(self.player1)
         self.do_next_turn(self.player2)
