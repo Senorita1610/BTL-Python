@@ -10,6 +10,7 @@ print('Python Version', sys.version)
 
 if __name__ == '__main__':
     os_family = {'Windows': 'win', 'Darwin': 'mac', 'Linux': 'linux'}[platform.system()]
+    #platform.system(): tên hệ điều hành đang được sử dụng để chạy chương trình
     sys.argv[:] = [sys.argv[0], 'build']
 
     buildOptions = dict(
