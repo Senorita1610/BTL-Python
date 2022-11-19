@@ -105,7 +105,7 @@ class Label:
 
 class Title(Label):
     def draw(self, W, size, scale):
-        W.write(self.x*size, self.y*size, self.text, size=size, font='cambria-bold')
+        W.write(self.x*size, self.y*size, self.text, size=size, font='FrostbiteBossFight-dL0Z')
 
 
 class ConditionalText:
@@ -224,4 +224,4 @@ class BigActionButton(ActionButton):
             box = (self.x*size, (self.y+0.1)*size, self.w*size, self.h*size)
             W.rect(box, (255, 200, 100))
 
-        W.write((self.x+self.w/2)*size, (self.y+1)*size, self.text, size=size, font='cambria-bold', pos='.')
+        W.write((self.x+self.w/2)*size, (self.y+1)*size, self.text, size=size, font='FrostbiteBossFight-dL0Z', pos='.')
