@@ -3,18 +3,18 @@ import random
 import simplified_pygame
 from settings import ACTIVE_SETTINGS, SAVED_SETTINGS
 
-FIGURE = {'-': [(0, 0), (1, 0), (-2, 0), (-1, 0)],
-          '0': [(0, 0), (-1, 0), (0, 1), (-1, 1)],
-          'L': [(0, 0), (-1, -1), (1, 0), (-1, 1)],
-          'j': [(0, 0), (-1, 0), (1, 0), (1, 1)],
-          's': [(-1, 0), (0, 1), (0, -1), (1, -1)],
-          'r': [( 1, 0), (0, 0), (0, -1), (-1, -1)],
-          'T': [(-1, 0), (0, 0), (0, -1), (1, 0)]}
-
-
-
+FIGURE = {'-': [(-1,-1),(1,-1),(-2,0),(-1,0),(0,0),(1,0),(2,0),(-1,1),(0,1),(1,1),(0,2)],
+          '0': [(0, 0)],
+          'L': [(0, 0), (-1, 0), (1, 0), (-1, 1)],
+          'j': [(0,-1),(1,-1),(-1,0),(0,1),(1,1),(0,0)],#thêm tâm
+          's': [(-1, 0), (0, 0), (0, -1), (1, -1)],
+          'r': [(0,0),(1,0),(2,0),(-1,0),(-2,0),(0,1),(-1,1),(1,1),(0,2),(-3,-1),(-2,-1),(-1,-1),
+(1,-1),(2,-1),(3,-1),(0,-1),(-3,-2),(-2,-2),
+(-1,-2),(0,-2),(1,-2),(2,-2),(3,-2),(-2,-3),
+(-1,-3),(1,-3),(2,-3)]
+,
+          'T': [(-1,0),(0,0),(0,-1),(1,0)]}
 INITIAL_SPEED = 300
-
 COLORS = ACTIVE_SETTINGS['color_scheme']
 #COLORS={
 #   'background':[230,230,230],
@@ -66,40 +66,45 @@ def make_random_generator():
 
 
 def rotate_figure(figure):
-    if figure == '0^': return '0^', FIGURE['0'], [(0, 0)]#xoay 1 khối hình vuông thì không thay đổi
+    if figure == '0^': return '0^', FIGURE['0'], [(0, 0)]
 
     if figure == 'T^': return 'T>', [( 1, 0),  (0, 0),   (0, -1),  (0, 1)],  [(0, 0)]
     if figure == 'T>': return 'Tv', [(-1, 0),  (0, 0),   (0,  1),  (1, 0)],  [(0, 0), (1, 0)]
     if figure == 'Tv': return 'T<', [(-1, 0),  (0, 0),   (0, -1),  (0, 1)],  [(0, 0)]
     if figure == 'T<': return 'T^', FIGURE['T'],  [(0, 0), (-1, 0)]
-
-    if figure == '-^': return '->', [( 0, 0),  (0, -1),  (0, -2),  (0, -3)], [(0, 0)]
-    if figure == '->': return '-^', FIGURE['-'],  [(0, 0), (0, 1)]
+    if figure == '-^': return '->', [(0,-2),(-1,-1),(0,-1),(1,-1),(0,0),(1,0),(2,0),(-1,1),(0,1),(1,1),(0,2)],[(0,0)]
+    if figure == '->': return '-v', [(0,-2),(-1,-1),(0,-1),(1,-1),(-2,0),(-1,0),(0,0),(1,0),(2,0),(-1,1),(1,1)],[(0,0)]
+    if figure == '-v': return '-<', [(0,-2),(-1,-1),(0,-1),(1,-1),(-2,0),(-1,0),(0,0),(-1,1),(0,1),(1,1),(0,2)],[(0,0)]
+    if figure == '-<': return '-^', FIGURE['-'],  [(0, 0)]
 
     if figure == 's^': return 's>', [(-1, -2), (-1, -1), (0, -1),  (0, 0)],  [(0, 0), (1, 0)]
     if figure == 's>': return 's^', FIGURE['s'],  [(0, 0), (0, 1)]
 
-    if figure == 'r^': return 'r>', [(1, -2), (1, -1), (0, -1),  (0, 0)],  [(0, 0), (-1, 0)]
-    if figure == 'r>': return 'r^', FIGURE['r'],  [(0, 0), (0, 1)]
+    if figure == 'r^': return 'r>', [(-2,-3),(-1,-3),(-3,-2),(-2,-2),(-1,-2),(0,-2),(-3,-1),(-2,-1),(-1,-1),(0,-1),(1,-1),(-2,0),(-1,0),(0,0),(1,0),(2,0),
+                                     (-3,1),(-2,1),(-1,1),(0,1),(1,1),(-3,2),(-2,2),(-1,2),(0,2),(-2,3),(-1,3)],[(0,0)]
+    if figure == 'r>': return 'rv', [(0,-2),(0,-1),(0,0),(0,1),(0,2)],[(0,0)]
+    if figure == 'rv': return 'r<', [(-2,0),(-1,-1),(-1,0),(-1,1),(0,-2),(0,-1),(0,0),(0,1),(0,2),(1,-3),(1,-2),(1,-1),(1,0),(1,1),(1,2),(1,3),(2,-3),(2,-2)
+                                     ,(2,-1),(2,0),(2,1),(2,2),(2,3),(3,-2),(3,-1),(3,1),(3,2)],[(0,0)]
+    if figure == 'r<': return 'r^', FIGURE['r'],  [(0, 0)]
 
-    if figure == 'Lv': return 'L>', [(0, 0), (0, -1), (0, 1), (1, 1)],  [(0, 0)]
-    if figure == 'L>': return 'L^', FIGURE['L'],  [(0, 0), (1, 0)]
+
+    if figure == 'Lv': return 'L>', [(0, 0), (0, -1), (0, 1), (1, 1)],[(0,0)]
+    if figure == 'L>': return 'L^', FIGURE['L'],  [(0, 0)]
     if figure == 'L^': return 'L<', [(0, 0), (0, -1), (0, 1), (-1, -1)],  [(0, 0)]
     if figure == 'L<': return 'Lv', [(0, 0), (-1, 0), (1, 0), (1, -1)],  [(0, 0), (-1, 0)]
 
-    if figure == 'jv': return 'j>', [(0, 0), (0, -1), (0, 1), (1, -1)],  [(0, 0)]
-    if figure == 'j>': return 'j^', FIGURE['j'],  [(0, 0), (1, 0)]
-    if figure == 'j^': return 'j<', [(0, 0), (0, -1), (0, 1), (-1, 1)],  [(0, 0)]
-    if figure == 'j<': return 'jv', [(0, 0), (-1, 0), (1, 0), (-1, -1)],  [(0, 0), (-1, 0)]
-
+    if figure == 'jv': return 'j>', [(-1,-1),(1,-1),(-1,0),(1,0),(0,1),(0,0)],[(0,0)]
+    if figure == 'j>': return 'j^', [(-1,-1),(0,-1),(1,0),(-1,1),(0,1),(0,0)],[(0,0)]
+    if figure == 'j^': return 'j<', [(0,-1),(-1,0),(1,0),(-1,1),(1,1),(0,0)],[(0,0)]
+    if figure == 'j<': return 'jv', FIGURE['j'],[(0,0)]
 
 class ColorField():
     def __init__(self, w, h):
         self.w = w
         self.h = h
         self.M = [[None for i in range(w)] for j in range(h)]
-        self.left = [[(255, 255, 255, 0) for i in range(w)] for j in range(h)]
-        self.bottom = [[(255, 255, 255, 0) for i in range(w)] for j in range(h)]
+        self.left = [[(255,255,255,255) for i in range(w)] for j in range(h)]
+        self.bottom = [[(255,255,255,0) for i in range(w)] for j in range(h)]
         self.corner = [[None for i in range(w)] for j in range(h)]
 
     def __getitem__(self, key):
@@ -222,7 +227,6 @@ class TetrisWell(simplified_pygame.EventReader):
         return None
 
     def space_left(self):
-        #ban đầu chiều cao của màn hình là 20 
         h = 0
         while all(self[x, h] != '#' for x in range(self.w)):
             h += 1
@@ -240,7 +244,7 @@ class TetrisWell(simplified_pygame.EventReader):
     #############################
     ## DRAWING
     #############################
-    #tạo 1 surface hình chữ nhật màu trắng để chơi game
+    #tạo 1 surface hình chữ nhật để chơi game
     def draw(self, canvas):
         size = ACTIVE_SETTINGS['size']
         canvas.rect((-1, -1, self.w*size+2, self.h*size+2), COLORS['well'])
@@ -477,10 +481,10 @@ class FallingFigure(simplified_pygame.EventReader):
         C.write(right,-scale*50,f'speed\n{int(1000/self.step_duration)-2}',size=14,pos='<')
         #hiện speed lên SCREEN
         if not self.play:
-            C.write(right//2,-scale*20,'GAME OVER',font='cambria-bold', size=14, pos='.')
+            C.write(right//2,-scale*20,'GAME OVER',font='FrostbiteBossFight-dL0Z', size=14, pos='.')
             #hiện game over
         elif self.message:
-            C.write(right//2, -scale*60, self.message, font='cambria-bold', size=14, pos='.')
+            C.write(right//2, -scale*60, self.message, font='FrostbiteBossFight-dL0Z', size=14, pos='.')
 
     #############################
     ## GAME
@@ -550,11 +554,15 @@ class FallingFigure(simplified_pygame.EventReader):
             self.step_duration -= 1
 
     def rotate(self):
+        #self.x,self.y: vị trí của khối hình
         if not self.play or not self.cur:
             return
         new_pos, new_item, new_coords = rotate_figure(self.cur)
         for dx, dy in new_coords:
             can_rotate = not self.GAME.check_collision(self.well, self, [(self.x+dx+i, self.y+dy+j) for i, j in new_item])
+            #self: tetris.FallingFigure
+            #self.well: tetris.TetrisWell
+            #self.GAME: game_modes.
             if can_rotate:
                 self.item = new_item
                 self.cur = new_pos
@@ -619,5 +627,5 @@ L 000r r --
         #size=10*min(W.w/600,W.h/400)
         W = W.with_offset(W.w//4-size*10, size*2)
         super().draw(W)
-        __version__ = '___XiaoHuHuHuH___'
-        W.write(0, 35*size, __version__, size=14)
+        name='___Author: Group 4___'
+        W.write(0,35*size,name, size=20)
