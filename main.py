@@ -9,10 +9,10 @@ import buttons
 SCREEN=simplified_pygame.PyGameWindow(
     w=SAVED_SETTINGS['w'],#w=1200
     h=SAVED_SETTINGS['h'],#h=800
-    caption='Tetris for two',
+    caption='Group 4 Tetris with love :))',
     use_icon=True,
-    bg_color=ACTIVE_SETTINGS['color_scheme']['background'],#[230,230,230]
-    default_font='cambria',
+    bg_color=ACTIVE_SETTINGS['color_scheme']['background'],
+    default_font='FrostbiteBossFight-dL0Z',
     resizable=True)
 import sprites
 def window_resize(w=1200, h=800):
@@ -86,7 +86,7 @@ class GameSelector(buttons.ActionButton):
             W.rect((x0, size*1, size*15, size*28), (255, 200, 100))
             W.sprite(x0+size*3, size*3, self.action.__name__, scale=scale/2)#tạo 1 surface hướng dẫn của 1 màn vào trong hướng dẫn
             #self.action.__name__ kiểu class simplified_pygame.Canvas
-            W.write(x0, 10*size, "    "+self.text, font='cambria-bold', size=size)#viết đoạn text vào trong hướng dẫn
+            W.write(x0, 10*size, "    "+self.text, font='FrostbiteBossFight-dL0Z', size=size)#viết đoạn text vào trong hướng dẫn
             W.write(x0, 10*size, str(self.action.__doc__), size=size)
 
     def on_mouse_click(self):
@@ -280,16 +280,16 @@ class SetSoundButton(buttons.SmallSetButton):
 
 menu_settings=buttons.Menu()
 menu_settings.append(buttons.Title('Color Scheme:'),y=3)#nhãn
-menu_settings.append(SetColorButton('Default',settings.DEFAULT_COLORS),dy=1)#nút
-menu_settings.append(SetColorButton('Piet Mondrian',settings.MONDRIAN_COLORS),dy=3)#nút
-menu_settings.append(SetColorButton('Leonardo da Vinci',settings.LEONARDO_COLORS), dy=3)#nút
-menu_settings.append(SetColorButton('John Everett Millais',settings.MILLAIS_COLORS), dy=3)#nút
-menu_settings.append(SetColorButton('Vincent van Gogh',settings.VAN_GOGH_COLORS), dy=3)#nút
-menu_settings.append(SetColorButton('Gustav Klimt',settings.KLIMT_COLORS), dy=3)#nút
+menu_settings.append(SetColorButton('Default color',settings.DEFAULT_COLORS),dy=1)#nút
+menu_settings.append(SetColorButton('Theme 1',settings.MONDRIAN_COLORS),dy=3)#nút
+menu_settings.append(SetColorButton('Theme 2',settings.LEONARDO_COLORS), dy=3)#nút
+menu_settings.append(SetColorButton('Theme 3',settings.MILLAIS_COLORS), dy=3)#nút
+menu_settings.append(SetColorButton('Theme 4',settings.VAN_GOGH_COLORS), dy=3)#nút
+menu_settings.append(SetColorButton('Theme 5',settings.KLIMT_COLORS), dy=3)#nút
 
-menu_settings.append(buttons.Title('Color blending effect:'), dy=5)
-menu_settings.append(SetBleedButton('Off', False), dy=1)
-menu_settings.append(SetBleedButton('On', True), dx=4)
+menu_settings.append(buttons.Title('Hieu ung tron mau:'), dy=5)
+menu_settings.append(SetBleedButton('Tat', False), dy=1)
+menu_settings.append(SetBleedButton('Bat', True), dx=4)
 
 
 menu_settings.append(buttons.Title('Screen:'), dx=-4, dy=5)
@@ -297,10 +297,10 @@ menu_settings.append(buttons.ActionButton('Reset Screen Size', window_resize), d
 
 
 menu_settings.append(buttons.Title('Keyboard Layout:'), x=14, y=3)
-menu_settings.append(SetKeysButton('QWERT', simplified_pygame.WASD_AS_ARROWS), dy=1)
-menu_settings.append(SetKeysButton('AZERT', simplified_pygame.ZQSD_AS_ARROWS), dy=3)
-menu_settings.append(SetKeysButton('Dvorak', simplified_pygame.AOE_AS_ARROWS), dy=3)
-menu_settings.append(SetKeysButton('Colemak', simplified_pygame.WARS_AS_ARROWS), dy=3)
+menu_settings.append(SetKeysButton('WASD', simplified_pygame.WASD_AS_ARROWS), dy=1)
+menu_settings.append(SetKeysButton('ZQSD', simplified_pygame.ZQSD_AS_ARROWS), dy=3)
+menu_settings.append(SetKeysButton('<EOA', simplified_pygame.AOE_AS_ARROWS), dy=3)
+menu_settings.append(SetKeysButton('WARS', simplified_pygame.WARS_AS_ARROWS), dy=3)
 
 menu_settings.append(buttons.Sprite('wasd'), dx=1, dy=4)#vẽ bàn phím wasd lên SCREEN
 menu_settings.append(buttons.ActionButton('Configure Buttons...', select_buttons), dx=-1, dy=5)#Chọn phím tùy thích
